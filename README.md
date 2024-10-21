@@ -1,70 +1,68 @@
-# Rust Latam: procedural macros workshop
+# Rust Latam：程序宏研讨会
 
-*This repo contains a selection of projects designed to learn to write Rust
-procedural macros &mdash; Rust code that generates Rust code.*
-
-*Each of these projects is drawn closely from a compelling real use case. Out of
-the 5 projects here, 3 are macros that I have personally implemented in
-industrial codebases for work, and the other 2 exist as libraries on crates.io
-by other authors.*
-
-<br>
-
-## Contents
-
-- [**Suggested prerequisites**](#suggested-prerequisites)
-- [**Projects**](#projects) — Introduction to each of the projects
-  - [**Derive macro:** `derive(Builder)`](#derive-macro-derivebuilder)
-  - [**Derive macro:** `derive(CustomDebug)`](#derive-macro-derivecustomdebug)
-  - [**Function-like macro:** `seq!`](#function-like-macro-seq)
-  - [**Attribute macro:** `#[sorted]`](#attribute-macro-sorted)
-  - [**Attribute macro:** `#[bitfield]`](#attribute-macro-bitfield)
-  - [**Project recommendations**](#project-recommendations) — What to work on
-    depending on your interests
-- [**Test harness**](#test-harness) — Explanation of how testing is set up
-- [**Workflow**](#workflow) — Recommended way to work through the workshop
-- [**Debugging tips**](#debugging-tips)
+*该 repo 包含一系列旨在学习编写 Rust 代码的精选项目。
+程序宏&mdash; 生成 Rust 代码的 Rust 代码。
+*这些项目中的每一个都取材于令人信服的实际用例。从
+这里的 5 个项目中，有 3 个是我亲自在 Rust 中实现的宏。
+工业代码库中实现的宏，另外两个宏作为库存在于 crates.io
+上的库。
 
 <br>
 
-## Suggested prerequisites
+## 内容
 
-This workshop covers attribute macros, derive macros, and function-like
-procedural macros.
-
-Be aware that the content of the workshop and the explanations in this repo will
-assume a working understanding of structs, enums, traits, trait impls, generic
-parameters, and trait bounds. You are welcome to dive into the workshop with any
-level of experience with Rust, but you may find that these basics are far easier
-to learn for the first time outside of the context of macros.
+- 建议的先决条件\*\*]（##建议的先决条件
+- 项目\*\*](#项目) - 各项目介绍
+- [**Derive 宏：** `derive(Builder)`](#derive-macro-derivebuilder)
+- [**探索宏:** `derive(CustomDebug)`](#derive-macro-derivecustomdebug)
+- [**类函数宏：** `seq!`](#function-like-macro-seq)
+- 属性宏：\*\* `#[排序]`](#attribute-macro-sorted)
+- [**属性宏:** `#[位域]`](#属性-宏-位域)
+- 项目建议\*\*](#project-recommendations) - 工作内容
+  取决于您的兴趣
+- 测试线束\*\*](#test-harness) - 关于如何设置测试的说明
+- 工作流程\*\*](#workflow) - 研讨会的推荐工作方式
+- 调试技巧\*\*](#调试技巧)
 
 <br>
 
-## Projects
+## 建议的先决条件
 
-Here is an introduction to each of the projects. At the bottom, I give
-recommendations for what order to tackle them based on your interests. Note that
-each of these projects goes into more depth than what is described in the
-introduction here.
+本讲座包括属性宏、派生宏和类函数宏。
+过程宏。
+请注意，工作坊的内容和本软件仓库中的解释将
+假定对结构体、枚举、特质、特质 impls、泛型
+参数和特质边界。欢迎您以任何
+但您可能会发现，这些基础知识要容易得多。
+但您可能会发现，这些基础知识在宏的环境之外更容易学习。
 
-### Derive macro: `derive(Builder)`
+<br>
 
-This macro generates the boilerplate code involved in implementing the [builder
-pattern] in Rust. Builders are a mechanism for instantiating structs, especially
-structs with many fields, and especially if many of those fields are optional or
-the set of fields may need to grow backward compatibly over time.
+## project
+
+下面是每个项目的介绍。在底部，我给出了
+根据你的兴趣，建议你按照什么顺序来完成它们。请注意
+每个项目的深度都比
+介绍的深度。
+
+### 派生宏：派生宏： `derive(Builder)`
+
+此宏生成实现 [builder] 所需的模板代码。
+[模式] 的模板代码。构造器是一种实例化结构体的机制，尤其是
+结构体的实例化机制，尤其是当这些结构体中有许多字段是可选的或
+随着时间的推移，字段集可能需要向后兼容增长。
 
 [builder pattern]: https://en.wikipedia.org/wiki/Builder_pattern
 
-There are a few different possibilities for expressing builders in Rust. Unless
-you have a strong pre-existing preference, to keep things simple for this
-project I would recommend following the example of the standard library's
-[`std::process::Command`] builder in which the setter methods each receive and
-return `&mut self` to allow chained method calls.
+在 Rust 中表达建造者有几种不同的可能性。除非
+你有强烈的预设偏好，为了保持简洁
+项目中，为了保持简洁，我建议仿效标准库中的
+[std::process::Command`]构建器的例子，其中的设置器方法分别接收和
+返回 `&mut self` 以允许链式方法调用。
 
 [`std::process::Command`]: https://doc.rust-lang.org/std/process/struct.Command.html
 
-Callers will invoke the macro as follows.
+调用者将以如下方式调用宏。
 
 ```rust
 use derive_builder::Builder;
@@ -89,25 +87,25 @@ fn main() {
 }
 ```
 
-This project covers:
+该项目包括
 
-- traversing syntax trees;
-- constructing output source code;
-- processing helper attributes to customize the generated code.
+- 遍历语法树
+- 构建输出源代码；
+- 处理辅助属性以定制生成的代码。
 
-*Project skeleton is located under the <kbd>builder</kbd> directory.*
+_Project skeleton is located under the <kbd>builder</kbd> directory._
 
-### Derive macro: `derive(CustomDebug)`
+### 派生宏：派生宏： `derive(CustomDebug)`
 
-This macro implements a derive for the standard library [`std::fmt::Debug`]
-trait that is more customizable than the similar `Debug` derive macro exposed by
-the standard library.
+该宏实现了标准库 [`std::fmt::Debug`]的派生。
+特质的派生宏，比由
+更可定制。
 
 [`std::fmt::Debug`]: https://doc.rust-lang.org/std/fmt/trait.Debug.html
 
-In particular, we'd like to be able to select the formatting used for individual
-struct fields by providing a format string in the style expected by Rust string
-formatting macros like `format!` and `println!`.
+特别是，我们希望能够选择用于单个
+字段所使用的格式。
+格式化宏（如 `format!` 和 `println!`）所期望的风格提供格式化字符串，从而选择用于单个结构体字段的格式化。
 
 ```rust
 use derive_debug::CustomDebug;
@@ -120,34 +118,33 @@ pub struct Field {
 }
 ```
 
-Here, one possible instance of the struct above might be printed by its
-generated `Debug` impl like this:
+在这里，上述结构体的一个可能实例可以通过其
+生成的 "调试 "隐式结构体打印出来：
 
 ```console
 Field { name: "st0", bitmask: 0b00011100 }
 ```
 
-This project covers:
+该项目包括
 
-- traversing syntax trees;
-- constructing output source code;
-- processing helper attributes;
-- dealing with lifetime parameters and type parameters;
-- inferring trait bounds on generic parameters of trait impls;
-- limitations of derive's ability to emit universally correct trait bounds.
+- 遍历语法树
+- 构建输出源代码；
+- 处理辅助属性
+- 处理生命周期参数和类型参数；
+- 推断性状 impls 通用参数的性状界限；
+- 派生指令在发出普遍正确的特质界限方面的局限性。
 
-*Project skeleton is located under the <kbd>debug</kbd> directory.*
+项目骨架位于 <kbd>debug</kbd> 目录下。
 
-### Function-like macro: `seq!`
+### 类函数宏：`seq!`
 
-This macro provides a syntax for stamping out sequentially indexed copies of an
-arbitrary chunk of code.
-
-For example our application may require an enum with sequentially numbered
-variants like `Cpu0` `Cpu1` `Cpu2` ... `Cpu511`. But note that the same `seq!`
-macro should work for any sort of compile-time loop; there is nothing specific
-to emitting enum variants. A different caller might use it for generating an
-expression like `tuple.0 + tuple.1 + ... + tuple.511`.
+该宏提供了一种语法，用于按顺序标出一个
+的顺序索引副本的语法。
+例如，我们的应用程序可能需要一个按顺序编号的
+变量，如 ` Cpu0``Cpu1``Cpu2 `...Cpu511`。但请注意，同样的 `seq!
+宏应适用于任何类型的编译时循环；没有任何特定的
+枚举变体。不同的调用者可能会使用它来生成一个
+表达式，如 `tuple.0 + tuple.1 + ...+ tuple.511`。
 
 ```rust
 use seq::seq;
@@ -169,20 +166,19 @@ fn main() {
 }
 ```
 
-This project covers:
+该项目包括
 
-- parsing custom syntax;
-- low-level representation of token streams;
-- constructing output source code.
+- 解析自定义语法；
+- 标记流的底层表示；
+- 构建输出源代码。
+  项目骨架位于 <kbd>seq</kbd> 目录下。
 
-*Project skeleton is located under the <kbd>seq</kbd> directory.*
+### 属性宏：`#[排序]`属性宏
 
-### Attribute macro: `#[sorted]`
-
-A macro for when your coworkers (or you yourself) cannot seem to keep enum
-variants in sorted order when adding variants or refactoring. The macro will
-detect unsorted variants at compile time and emit an error pointing out which
-variants are out of order.
+当你的同事（或你自己）似乎无法将枚举
+变体排序时使用的宏。该宏将
+会在编译时检测到未排序的变体，并发出错误提示，指出哪个
+不按顺序排列的变体。
 
 ```rust
 #[sorted]
@@ -200,37 +196,32 @@ pub enum Error {
 }
 ```
 
-This project covers:
+该项目包括
 
-- compile-time error reporting;
-- application of visitor pattern to traverse a syntax tree;
-- limitations of the currently stable macro API and some ways to work around
-  them.
+- 编译时错误报告；
+- 应用访问者模式遍历语法树；
+- 目前稳定的宏 API 的局限性和一些解决方法
+  的局限性和一些解决方法。
+  项目骨架位于 <kbd>sorted</kbd> 目录下。
 
-*Project skeleton is located under the <kbd>sorted</kbd> directory.*
+### 属性宏：`#[bitfield]`属性宏
 
-### Attribute macro: `#[bitfield]`
-
-This macro provides a mechanism for defining structs in a packed binary
-representation with access to ranges of bits, similar to the language-level
-support for [bit fields in C].
-
-[bit fields in C]: https://en.cppreference.com/w/cpp/language/bit_field
-
-The macro will conceptualize one of these structs as a sequence of bits 0..N.
-The bits are grouped into fields in the order specified by a struct written by
-the caller. The `#[bitfield]` attribute rewrites the caller's struct into a
-private byte array representation with public getter and setter methods for each
-field.
-
-The total number of bits N is required to be a multiple of 8 (this will be
-checked at compile time).
-
-For example, the following invocation builds a struct with a total size of 32
-bits or 4 bytes. It places field `a` in the least significant bit of the first
-byte, field `b` in the next three least significant bits, field `c` in the
-remaining four most significant bits of the first byte, and field `d` spanning
-the next three bytes.
+该宏为在打包的二进制结构中定义结构体提供了一种机制
+访问比特范围的机制，类似于语言级的
+位字段]的语言级支持。
+[C 语言中的位字段]：https://en.cppreference.com/w/cpp/language/bit_field
+宏将把其中一个结构体概念化为 0...N 的位序列。
+这些比特按照由以下结构写入的结构所指定的顺序分组到字段中
+调用者编写的结构体所指定的顺序分组。#[位字段]"属性将调用者的结构重写为一个
+私有字节数组表示，每个字节数组都有公共 getter 和 setter 方法。
+字段的公共 getter 和 setter 方法。
+总位数 N 必须是 8 的倍数（这将是
+将在编译时检查）。
+例如，下面的调用会生成一个总大小为 32 的结构体
+位或 4 字节。它将字段 `a` 置于第一个
+字段 `a` 放在第一个字节的最小有效位，字段 `b` 放在接下来的三个最小有效位，字段 `c` 放在最后一个字节的最小有效位。
+字段 `c` 放在第一个字节的其余四个最有效位上，字段 `d` 跨过第一个字节。
+跨接下来的三个字节。
 
 ```rust
 use bitfield::*;
@@ -259,10 +250,10 @@ pub struct MyFourBytes {
                least significant bit of d         most significant
 ```
 
-The code emitted by the `#[bitfield]` macro for this struct would be as follows.
-Note that the field getters and setters use whichever of `u8`, `u16`, `u32`,
-`u64` is the smallest while being at least as large as the number of bits in
-the field.
+该结构的 `#[位字段]`宏发出的代码如下。
+请注意，字段获取器和设置器使用的是 `u8`、`u16`、`u32` 中的任意一个、
+u64`中最小的一个，同时至少与
+位数。
 
 ```rust
 impl MyFourBytes {
@@ -281,65 +272,58 @@ impl MyFourBytes {
 }
 ```
 
-This project covers:
+该项目包括
 
-- traversing syntax trees;
-- processing helper attributes;
-- constructing output source code;
-- interacting with traits and structs other than from the standard library;
-- techniques for compile-time assertions that require type information, by
-  leveraging the trait system in interesting ways from generated code;
-- tricky code.
+- 遍历语法树
+- 处理辅助属性；
+- 构建输出源代码；
+- 与标准库以外的特质和结构体交互；
+- 需要类型信息的编译时断言技术，通过
+  从生成的代码中以有趣的方式利用特质系统；
+- 棘手的代码。
+  项目骨架位于 <kbd>bitfield</kbd> 目录下。
 
-*Project skeleton is located under the <kbd>bitfield</kbd> directory.*
+### 项目建议
 
-### Project recommendations
+如果您是第一次使用程序宏，我建议您
+从 `derive(Builder)` 项目开始。这将让你熟悉
+遍历语法树和构建输出源代码。这两个
+过程宏的两个基本组成部分。
+在这之后，同样可以跳转到任何一个
+derive(CustomDebug)`、`seq!`或`#[sorted]`。
 
-If this is your first time working with procedural macros, I would recommend
-starting with the `derive(Builder)` project. This will get you comfortable with
-traversing syntax trees and constructing output source code. These are the two
-fundamental components of a procedural macro.
-
-After that, it would be equally reasonable to jump to any of
-`derive(CustomDebug)`, `seq!`, or `#[sorted]`.
-
-- Go for `derive(CustomDebug)` if you are interested in exploring how macros
-  manipulate trait bounds, which is one of the most complicated aspects of
-  code generation in Rust involving generic code like [Serde]. This project
-  provides an approachable introduction to trait bounds and digs into many of
-  the challenging aspects.
-
-- Go for `seq!` if you are interested in parsing a custom input syntax yourself.
-  The other projects will all mostly rely on parsers that have already been
-  written and distributed as a library, since their input is ordinary Rust
-  syntax.
-
-- Go for `#[sorted]` if you are interested in generating diagnostics (custom
-  errors) via a macro. Part of this project also covers a different way of
-  processing input syntax trees; the other projects will do most things through
-  `if let`. The visitor approach is better suited to certain types of macros
-  involving statements or expressions as we'll see here when checking that
-  `match` arms are sorted.
-
+- 如果您有兴趣探索宏如何使用，请选择 `derive(CustomDebug)` 。
+  操作特质边界，而这正是
+  代码生成最复杂的方面之一。本项目
+  对特质边界进行了平易近人的介绍，并深入探讨了许多
+  具有挑战性的方面。
+- 如果你对自己解析自定义输入语法感兴趣，可以选择 `seq!`。
+  其他项目都将主要依赖于已经完成的解析器。
+  编写并作为库发布的解析器，因为它们的输入是普通的 Rust
+  语法。
+- 如果您对生成诊断信息（自定义的
+  错误）。本项目的一部分还涵盖了一种不同的
+  处理输入语法树的不同方法；其他项目将通过
+  if let`.访问者方法更适合某些类型的宏
+涉及语句或表达式的宏。
+match "臂已排序。
 [Serde]: https://serde.rs/
-
-I would recommend starting on `#[bitfield]` only after you feel you have a
-strong grasp on at least two of the other projects. Note that completing the
-full intended design will involve writing at least one of all three types of
-procedural macros and substantially more code than the other projects.
+我建议，只有在您觉得自己已经掌握了 `#[位域]`之后，才开始使用 `#[位域]`。
+  其他项目中的至少两个项目。请注意，完成
+  完整的预期设计将涉及编写所有三种类型中的至少一种
+  程序宏，代码量也比其他项目多得多。
 
 <br>
 
-## Test harness
+## 测试线束
 
-Testing macros thoroughly tends to be tricky. Rust and Cargo have a built-in
-testing framework via `cargo test` which can work for testing the success cases,
-but we also really care that our macros produce good error message when they
-detect a problem at compile time; Cargo isn't able to say that failing to
-compile is considered a success, and isn't able to compare that the error
-message produced by the compiler is exactly what we expect.
-
-The project skeletons in this repository use an alternative test harness called
+彻底测试宏往往很棘手。Rust 和 Cargo 内置了
+测试框架，可用于测试成功案例、
+但我们也非常关心我们的宏在发生错误时是否能产生良好的错误信息。
+在编译时检测到问题；Cargo 并不能说在编译时未能
+编译失败被认为是成功的，也不能比较出错的
+编译器生成的错误信息是否与我们所期望的一致。
+该资源库中的项目骨架使用另一种测试工具，名为
 [trybuild].
 
 [trybuild]: https://github.com/dtolnay/trybuild
@@ -350,34 +334,30 @@ The project skeletons in this repository use an alternative test harness called
 </a>
 </p>
 
-The test harness is geared toward iterating on the implementation of a
-procedural macro, observing the errors emitted by failed executions of the
-macro, and testing that those errors are as expected.
+测试线束的目的是迭代一个
+程序宏的执行，观察程序宏执行失败后产生的错误。
+并测试这些错误是否符合预期。
 
 <br>
 
-## Workflow
+## 工作流程
 
-Every project has a test suite already written under its <kbd>tests</kbd>
-directory. (But feel free to add more tests, remove tests for functionality you
-don't want to implement, or modify tests as you see fit to align with your
-implementation.)
-
-Run `cargo test` inside any of the 5 top-level project directories to run the
-test suite for that project.
-
-Initially every projects starts with all of its tests disabled. Open up the
-project's *tests/progress.rs* file and enable tests one at a time as you work
-through the implementation. **The test files (for example *tests/01-parse.rs*)
-each contain a comment explaining what functionality is tested and giving some
-tips for how to implement it.** I recommend working through tests in numbered
-order, each time enabling one more test and getting it passing before moving on.
-
-Tests come in two flavors: tests that should compile+run successfully, and tests
-that should fail to compile with a specific error message.
-
-If a test should compile and run successfully, but fails, the test runner will
-surface the compiler error or runtime error output.
+每个项目的 <kbd>tests</kbd> 下都已编写了测试套件
+目录下。(但您也可以随意添加更多测试，删除功能测试。
+或修改测试，使其与您的项目相一致。
+实现）。
+在 5 个顶级项目目录中的任意目录下运行 `cargo test` 以运行
+测试套件。
+最初，每个项目都会禁用所有测试。打开
+项目的 _tests/progress.rs_ 文件，并在工作过程中逐个启用测试。
+逐个启用测试。\*\*测试文件（例如 _tests/01-parse.rs_ 文件）
+测试文件（例如 _tests/01-parse.rs_）都包含一个注释，解释要测试的功能，并给出一些
+我建议按编号来完成测试。
+我建议按编号顺序完成测试，每次多启用一个测试并确保其通过后再继续。
+测试分为两种：一种是应成功编译并运行的测试，另一种是应成功编译并运行的测试。
+应编译失败并带有特定的错误信息。
+如果测试应成功编译并运行，但却失败了，测试运行程序将
+会显示编译器错误或运行时错误输出。
 
 <p align="center">
 <a href="#workflow">
@@ -385,13 +365,12 @@ surface the compiler error or runtime error output.
 </a>
 </p>
 
-For tests that should fail to compile, we compare the compilation output against
-a file of expected errors for that test. If those errors match, the test is
-considered to pass. If they do not match, the test runner will surface the
-expected and actual output.
-
-Expected output goes in a file with the same name as the test except with an
-extension of _*.stderr_ instead of _*.rs_.
+对于编译失败的测试，我们将编译输出与
+该测试的预期错误文件进行比较。如果这些错误匹配，则测试
+视为通过。如果不匹配，测试运行程序将显示
+预期输出和实际输出。
+预期输出将放入与测试同名的文件中，但会在文件中加上
+扩展名为 _\*.stderr_，而不是 _\*.rs_。
 
 <p align="center">
 <a href="#workflow">
@@ -399,12 +378,12 @@ extension of _*.stderr_ instead of _*.rs_.
 </a>
 </p>
 
-If there is no _*.stderr_ file for a test that is supposed to fail to compile,
-the test runner will save the compiler's output into a directory called
-<kbd>wip</kbd> adjacent to the <kbd>tests</kbd> directory. So the way to update
-the "expected" output is to delete the existing _*.stderr_ file, run the tests
-again so that the output is written to *wip*, and then move the new output from
-*wip* to *tests*.
+如果本应编译失败的测试没有 _\*.stderr_ 文件、
+测试运行器会将编译器的输出保存到一个名为
+<kbd>tests</kbd>目录相邻的 <kbd>wip</kbd> 目录中。因此，更新
+预期 "输出的方法是删除现有的 _\*.stderr_ 文件，然后运行测试
+再次运行测试，使输出写入 _wip_，然后将新输出从
+移到 _tests_。
 
 <p align="center">
 <a href="#workflow">
@@ -414,41 +393,39 @@ again so that the output is written to *wip*, and then move the new output from
 
 <br>
 
-## Debugging tips
+## 调试技巧
 
-To look at what code a macro is expanding into, install the [cargo expand] Cargo
-subcommand and then run `cargo expand` in the repository root (outside of any of
-the project directories) to expand the main.rs file in that directory. You can
-copy any of the test cases into this main.rs and tweak it as you iterate on the
-macro.
+要查看宏扩展到哪些代码，请安装 [cargo expand] 货物
+子命令，然后在版本库根目录下运行 `cargo expand` （在任何
+项目目录之外），展开该目录中的 main.rs 文件。您可以
+将任何测试用例复制到该 main.rs 文件中，并在迭代时对其进行调整。
+宏。
 
 [cargo expand]: https://github.com/dtolnay/cargo-expand
 
-If a macro is emitting syntactically invalid code (not just code that fails
-type-checking) then cargo expand will not be able to show it. Instead have the
-macro print its generated TokenStream to stderr before returning the tokens.
+如果宏正在生成语法上无效的代码（不仅仅是无法识别的代码
+类型检查失败的代码），那么 cargo expand 将无法显示它。取而代之的是
+宏生成的令牌流（TokenStream）打印到 stderr，然后再返回令牌。
 
 ```rust
 eprintln!("TOKENS: {}", tokens);
 ```
 
-Then a `cargo check` in the repository root (if you are iterating using main.rs)
-or `cargo test` in the corresponding project directory will display this output
-during macro expansion.
-
-Stderr is also a helpful way to see the structure of the syntax tree that gets
-parsed from the input of the macro.
+然后在版本库根目录下进行 "货物检查"（如果使用 main.rs 进行迭代的话）
+或相应项目目录中的 `cargo test` 会显示以下输出结果
+会在宏扩展时显示此输出。
+Stderr 也是查看语法树结构的一个有用方法。
+的语法树结构。
 
 ```rust
 eprintln!("INPUT: {:#?}", syntax_tree);
 ```
 
-Note that in order for Syn's syntax tree types to provide Debug impls, you will
-need to set `features = ["extra-traits"]` on the dependency on Syn. This is
-because adding hundreds of Debug impls adds an appreciable amount of compile
-time to Syn, and we really only need this enabled while doing development on a
-macro rather than when the finished macro is published to users.
-
+请注意，为了让 Syn 的语法树类型提供调试 impls，您需要
+需要在 Syn 的依赖关系中设置 `features = ["extra-traits"]` 。这是
+因为添加数百个调试 impls 会增加大量编译
+的编译时间，而且我们只需要在一个
+而不是在向用户发布完成的宏时。
 <br>
 
 ### License
