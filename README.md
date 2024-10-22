@@ -11,18 +11,18 @@
 
 ## 内容
 
-- 建议的先决条件\*\*]（##建议的先决条件
-- 项目\*\*](#项目) - 各项目介绍
-- [**Derive 宏：** `derive(Builder)`](#derive-macro-derivebuilder)
-- [**探索宏:** `derive(CustomDebug)`](#derive-macro-derivecustomdebug)
-- [**类函数宏：** `seq!`](#function-like-macro-seq)
-- 属性宏：\*\* `#[排序]`](#attribute-macro-sorted)
-- [**属性宏:** `#[位域]`](#属性-宏-位域)
-- 项目建议\*\*](#project-recommendations) - 工作内容
-  取决于您的兴趣
-- 测试线束\*\*](#test-harness) - 关于如何设置测试的说明
-- 工作流程\*\*](#workflow) - 研讨会的推荐工作方式
-- 调试技巧\*\*](#调试技巧)
+- [**Suggested prerequisites**](#suggested-prerequisites)
+- [**Projects**](#projects) — 每个项目的介绍
+  - [**派生宏:** `derive(Builder)`](#derive-macro-derivebuilder)
+  - [**派生宏:** `derive(CustomDebug)`](#derive-macro-derivecustomdebug)
+  - [**函数宏:** `seq!`](#function-like-macro-seq)
+  - [**属性宏:** `#[sorted]`](#attribute-macro-sorted)
+  - [**属性宏:** `#[bitfield]`](#attribute-macro-bitfield)
+  - [**Project recommendations**](#project-recommendations) —  工作内容
+取决于你的兴趣
+- [**Test harness**](#test-harness) — 测试设置说明
+- [**Workflow**](#workflow) —  通过 研讨会开展工作的建议方式
+- [**Debugging tips**](#debugging-tips)
 
 <br>
 
@@ -31,7 +31,7 @@
 本讲座包括属性宏、派生宏和类函数宏。
 过程宏。
 请注意，工作坊的内容和本软件仓库中的解释将
-假定对结构体、枚举、特质、特质 impls、泛型
+假定对结构体、枚举、特质、特质/impls、泛型
 参数和特质边界。欢迎您以任何
 但您可能会发现，这些基础知识要容易得多。
 但您可能会发现，这些基础知识在宏的环境之外更容易学习。
