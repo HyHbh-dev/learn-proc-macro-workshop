@@ -1,5 +1,5 @@
-// Generate methods on the builder for setting a value of each of the struct
-// fields.
+// 在构建器上生成方法，用于设置每个结构体的值
+// 字段。
 //
 //     impl CommandBuilder {
 //         fn executable(&mut self, executable: String) -> &mut Self {
@@ -14,10 +14,10 @@ use derive_builder::Builder;
 
 #[derive(Builder)]
 pub struct Command {
-    executable: String,
-    args: Vec<String>,
-    env: Vec<String>,
-    current_dir: String,
+    executable: Option<String>,
+    args: Option<Vec<String>>,
+    env: Option<Vec<String>>,
+    current_dir: Option<String>,
 }
 
 fn main() {
