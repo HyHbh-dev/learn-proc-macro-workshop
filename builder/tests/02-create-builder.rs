@@ -1,17 +1,17 @@
-// Have the macro produce a struct for the builder state, and a `builder`
-// function that creates an empty instance of the builder.
+// 让宏为生成器状态生成一个结构，并生成一个 `builder` 结构。
+// 函数，用于创建一个空的构建器实例。
 //
-// As a quick start, try generating the following code (but make sure the type
-// name matches what is in the caller's input).
+// 作为快速入门，请尝试生成以下代码（但要确保类型
+// 名称与调用者输入的名称一致）。
 //
 //     impl Command {
 //         pub fn builder() {}
 //     }
 //
-// At this point the test should pass because it isn't doing anything with the
-// builder yet, so `()` as the builder type is as good as any other.
+// 此时测试应该会通过，因为它并没有对
+// 因此，`()` 作为生成器类型和其他类型一样好。
 //
-// Before moving on, have the macro also generate:
+// 在继续之前，还需要生成宏：
 //
 //     pub struct CommandBuilder {
 //         executable: Option<String>,
@@ -43,6 +43,13 @@
 //     https://docs.rs/syn/2.0/syn/struct.Ident.html
 
 use derive_builder::Builder;
+
+pub struct CommandBuilder {
+    executable: Option<String>,
+    args: Option<Vec<String>>,
+    env: Option<Vec<String>>,
+    current_dir: Option<String>,
+}
 
 #[derive(Builder)]
 pub struct Command {
