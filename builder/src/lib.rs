@@ -38,7 +38,8 @@ fn do_expand(ast: &syn::DeriveInput) -> syn::Result<proc_macro2::TokenStream> {
     let struct_init = generate_builder_struct_fields_init(ast)?;
     // 设置结构体字段设置函数
     let setter_methods = generate_builder_setter_methods(ast)?;
-
+    // 构造build函数
+    let build_method = generate_build_method(ast)?;
     let res = quote::quote! {
         pub struct #builder_ident {
             #struct_item
@@ -54,6 +55,7 @@ fn do_expand(ast: &syn::DeriveInput) -> syn::Result<proc_macro2::TokenStream> {
 
         impl #builder_ident {
             #(#setter_methods)*
+            #build_method
         }
     };
     Ok(res)
@@ -126,4 +128,31 @@ fn generate_builder_setter_methods(
         fn_list.push(method);
     }
     Ok(fn_list)
+}
+
+// 构造build函数
+fn generate_build_method(ast: &syn::DeriveInput) -> syn::Result<proc_macro2::TokenStream> {
+    // 获取结构体的字段
+    let fields = get_struct_fields(ast)?;
+    // 获取字段的标识符和类型
+    let idents: Vec<_> = fields.iter().map(|f| f.ident.as_ref().unwrap()).collect();
+    let struct_ident = &ast.ident;
+
+    // 构建 `build` 方法的 token stream
+    let build_method = quote::quote! {
+        pub fn build(&self) -> Result<#struct_ident, Box<dyn std::error::Error>> {
+            #(
+                if self.#idents.is_none() {
+                    return Err(format!("{} is missing", stringify!(#idents)).into());
+                }
+            )*
+            let result = #struct_ident {
+                #(
+                    #idents: self.#idents.clone().unwrap(),
+                )*
+            };
+            Ok(result)
+        }
+    };
+    Ok(build_method)
 }

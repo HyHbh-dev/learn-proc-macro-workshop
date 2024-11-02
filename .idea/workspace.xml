@@ -7,21 +7,24 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="206ea133-73de-4c08-a499-1a110fb6b53f" name="Changes" comment="" />
+    <list default="true" id="206ea133-73de-4c08-a499-1a110fb6b53f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/builder/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/builder/src/lib.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="a351qvwd" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2nqA4SgklwbbJ5dRE5H3bfcmsJ5" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -36,7 +39,8 @@
     "git-widget-placeholder": "master",
     "nodejs_package_manager_path": "npm",
     "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
-    "org.rust.first.attach.projects": "true"
+    "org.rust.first.attach.projects": "true",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager" selected="Cargo.Test tests">
@@ -127,6 +131,7 @@
       <option name="presentableId" value="Default" />
       <updated>1729690041395</updated>
       <workItem from="1729690042458" duration="96000" />
+      <workItem from="1730549734655" duration="90000" />
     </task>
     <servers />
   </component>
