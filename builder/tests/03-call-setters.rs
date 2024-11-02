@@ -14,10 +14,10 @@ use derive_builder::Builder;
 
 #[derive(Builder)]
 pub struct Command {
-    executable: Option<String>,
-    args: Option<Vec<String>>,
-    env: Option<Vec<String>>,
-    current_dir: Option<String>,
+    executable: String,
+    args: Vec<String>,
+    env: Vec<String>,
+    current_dir: String,
 }
 
 fn main() {

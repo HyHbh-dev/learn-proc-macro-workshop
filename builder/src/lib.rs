@@ -24,44 +24,36 @@ pub fn derive(input: TokenStream) -> TokenStream {
 }
 
 fn do_expand(ast: &syn::DeriveInput) -> syn::Result<proc_macro2::TokenStream> {
+    // 获取结构体名称
     let struct_ident = &ast.ident;
+    // 生成构建器结构体名称
     let struct_ident_literal = struct_ident.to_string();
     let builder_ident = syn::Ident::new(
         &format!("{}Builder", struct_ident_literal),
         struct_ident.span(),
     );
-
-    // 生成结构体字段定义和初始化代码
-    // pub struct CommandBuilder {
-    //         executable: Option<String>,
-    //         args: Option<Vec<String>>,
-    //         env: Option<Vec<String>>,
-    //         current_dir: Option<String>,
-    //     }
+    // 生成构建器结构体字段定义
     let struct_item = generate_builder_struct_fields_def(ast)?;
-    //     impl Command {
-    //         pub fn builder() -> CommandBuilder {
-    //             CommandBuilder {
-    //                 executable: None,
-    //                 args: None,
-    //                 env: None,
-    //                 current_dir: None,
-    //             }
-    //         }
-    //     }
+    // 生成构建器结构体字段设置函数初始化为None
     let struct_init = generate_builder_struct_fields_init(ast)?;
+    // 设置结构体字段设置函数
+    let setter_methods = generate_builder_setter_methods(ast)?;
 
     let res = quote::quote! {
         pub struct #builder_ident {
             #struct_item
-        };
+        }
 
         impl #struct_ident {
             pub fn builder() -> #builder_ident {
                 #builder_ident {
-                    #(#struct_init),*
+                    #(#struct_init,)*
                 }
             }
+        }
+
+        impl #builder_ident {
+            #(#setter_methods)*
         }
     };
     Ok(res)
@@ -108,10 +100,30 @@ fn generate_builder_struct_fields_init(
         .map(|f| {
             let ident = &f.ident;
             quote::quote! {
-                #ident: None
+                #ident: std::option::Option::None
             }
         })
         .collect();
 
     Ok(init_clause)
+}
+
+// 设置结构体字段设置函数
+fn generate_builder_setter_methods(
+    ast: &syn::DeriveInput,
+) -> syn::Result<Vec<proc_macro2::TokenStream>> {
+    let fields = get_struct_fields(ast)?;
+    let setter_methods: Vec<_> = fields.iter().map(|f| &f.ident).collect();
+    let ty = fields.iter().map(|f| &f.ty);
+    let mut fn_list = Vec::new();
+    for (ident, ty) in setter_methods.iter().zip(ty) {
+        let method = quote::quote! {
+            pub fn #ident(&mut self, #ident:#ty)->&mut Self{
+                self.#ident = Some(#ident);
+                self
+            }
+        };
+        fn_list.push(method);
+    }
+    Ok(fn_list)
 }

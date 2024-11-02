@@ -54,7 +54,6 @@ pub struct Command {
 
 fn main() {
     let builder = Command::builder();
-    println!(builder);
 
     let _ = builder;
 }
